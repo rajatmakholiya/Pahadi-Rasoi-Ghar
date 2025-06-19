@@ -6,7 +6,6 @@ import Head from "next/head";
 import DarkModeLogo from "../../assets/darkmode_logo.png";
 import LightModeLogo from "../../assets/lightmode_logo.png";
 import Image from "next/image";
-// import Navbar from "../components/Navbar";
 import Link from "next/link";
 
 function HomePage() {
