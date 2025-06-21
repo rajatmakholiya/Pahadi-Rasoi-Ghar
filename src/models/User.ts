@@ -11,11 +11,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password.'],
     select: false, // Automatically exclude password from query results
+    unique:false
   },
   address: {
     type: String,
     required: false,
-    unique: true, // Assuming address should be unique
   },
   // You can add more fields here, like name, createdAt, etc.
   createdAt: {

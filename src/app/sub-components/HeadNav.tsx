@@ -81,12 +81,12 @@ const HeadNav: React.FC<HeadNavProps> = ({ darkTheme, setDarkTheme }) => {
         />
         {darkTheme ? (
           <Sun
-            className="cursor-pointer h-6 w-6 text-yellow-400 hover:text-yellow-300"
+            className="cursor-pointer h-6 w-6 text-white hover:text-yellow-300"
             onClick={() => setDarkTheme(false)}
           />
         ) : (
           <Moon
-            className="cursor-pointer h-6 w-6 text-indigo-600 hover:text-indigo-500"
+            className="cursor-pointer h-6 w-6 text-white hover:text-gray-200"
             onClick={() => setDarkTheme(true)}
           />
         )}
