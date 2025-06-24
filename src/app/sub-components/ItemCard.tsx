@@ -1,3 +1,4 @@
+// src/app/sub-components/ItemCard.tsx
 import React from "react";
 import Image from "next/image";
 import {
@@ -7,10 +8,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"; // Assuming your Shadcn components are in @/components/ui
-import { Button } from "@/components/ui/button"; // Import the Button component
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
 
 interface ItemCardProps {
+  _id: string; // Add _id to props to identify the item
   imageUrl: string;
   imageAlt?: string;
   title: string;
@@ -20,6 +23,7 @@ interface ItemCardProps {
 }
 
 const ItemCard: React.FC<ItemCardProps> = ({
+  _id, // Destructure _id
   imageUrl,
   imageAlt = "Item image",
   title,
@@ -27,8 +31,23 @@ const ItemCard: React.FC<ItemCardProps> = ({
   price,
   className
 }) => {
+  const { addToCart, increaseQuantity, decreaseQuantity, getQuantity } = useCart();
+  const quantity = getQuantity(_id);
+
+  const handleAddToCartClick = () => {
+    addToCart({ _id, name: title, description, price: typeof price === 'string' ? parseFloat(price.replace('₹', '')) : price, imageUrl });
+  };
+
+  const handleIncrease = () => {
+    increaseQuantity(_id);
+  };
+
+  const handleDecrease = () => {
+    decreaseQuantity(_id);
+  };
+
   return (
-    <Card className={`w-[300px] flex flex-col justify-between border-none shadow-none gap-[2] dark:bg-[#1f1e1e] ${className}`}>
+    <Card className={`w-[300px] flex flex-col justify-between border-none shadow-none gap-[2] ${className}`}>
       <CardContent className="p-0 overflow-hidden ">
         <div className="relative w-full h-[12.5rem] mb-3">
           <Image
@@ -42,15 +61,27 @@ const ItemCard: React.FC<ItemCardProps> = ({
       </CardContent>
       <CardHeader>
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
-        <CardDescription className="text-sm text-gray-600 dark:text-gray-400 pb-2">
+        <CardDescription className="text-sm text-gray-600 pb-2">
           {description}
         </CardDescription>
       </CardHeader>
       <CardFooter className="align-bottom justify-between items-center">
-        <p className="text-md font-medium text-gray-800 dark:text-gray-200">
-          {typeof price === "number" ? `$${price.toFixed(2)}` : price}
+        <p className="text-md font-medium text-gray-800">
+          {typeof price === "number" ? `₹${price.toFixed(2)}` : price}
         </p>
-        <Button>Add to Cart</Button>
+        {quantity === 0 ? (
+          <Button onClick={handleAddToCartClick}>Add to Cart</Button>
+        ) : (
+          <div className="flex items-center space-x-2">
+            <Button size="sm" onClick={handleDecrease} disabled={quantity === 0}>
+              -
+            </Button>
+            <span className="font-semibold">{quantity}</span>
+            <Button size="sm" onClick={handleIncrease}>
+              +
+            </Button>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

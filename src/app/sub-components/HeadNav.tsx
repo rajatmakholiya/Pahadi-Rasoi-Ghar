@@ -1,22 +1,25 @@
+// src/app/sub-components/HeadNav.tsx
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
-import DarkModeLogo from "../../assets/darkmode_logo.png";
-import LightModeLogo from "../../assets/lightmode_logo.png";
-import { Moon, ShoppingCart, Sun } from 'lucide-react';
+import LightModeLogo from "../../assets/darkmode_logo.png";
+import { ShoppingCart } from 'lucide-react';
+import CartSidebar from './CartSidebar';
+import { useCart } from '@/context/CartContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import AddressesModal from './AddressesModal';
 
-interface HeadNavProps {
-  darkTheme: boolean;
-  setDarkTheme: (value: boolean) => void;
-}
-
-const HeadNav: React.FC<HeadNavProps> = ({ darkTheme, setDarkTheme }) => {
+const HeadNav: React.FC = () => {
   const router = useRouter();
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isCartSidebarOpen, setIsCartSidebarOpen] = useState(false);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false); // State for the address modal
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { cartItems } = useCart();
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail');
@@ -44,31 +47,20 @@ const HeadNav: React.FC<HeadNavProps> = ({ darkTheme, setDarkTheme }) => {
     router.push('/login');
   };
 
-  return (
-    // The background color now uses the dark: variant to match the layout
-    <header className="flex flex-row items-center justify-between w-full px-20 py-2 transition-colors duration-300 ease-in-out">
-      {darkTheme ? (
-        <Image
-          src={DarkModeLogo}
-          alt="PRG Logo Dark"
-          className="w-32 h-15 sm:w-32 sm:h-18"
-          width={200}
-          height={200}
-          priority
-        />
-      ) : (
-        <Image
-          src={LightModeLogo}
-          alt="PRG Logo Light"
-          className="w-32 h-15 sm:w-32 sm:h-18"
-          width={200}
-          height={200}
-          priority
-        />
-      )}
+  const totalUniqueItems = cartItems.length;
 
-      {/* Text color also uses the dark: variant now for consistency */}
-      <div className="flex flex-row items-center justify-center gap-15 w-full px-6 py-3 text-gray-800 dark:text-white">
+  return (
+    <header className="flex flex-row items-center justify-between w-full px-20 py-2 transition-colors duration-300 ease-in-out">
+      <Image
+        src={LightModeLogo}
+        alt="PRG Logo"
+        className="w-32 h-15 sm:w-32 sm:h-18"
+        width={200}
+        height={200}
+        priority
+      />
+
+      <div className="flex flex-row items-center justify-center gap-15 w-full px-6 py-3 text-gray-800">
         <Link href="/">Home</Link>
         <Link href="/menu">Menu</Link>
         <Link href="/about">About Us</Link>
@@ -76,21 +68,18 @@ const HeadNav: React.FC<HeadNavProps> = ({ darkTheme, setDarkTheme }) => {
       </div>
 
       <div className="flex items-center space-x-4 sm:space-x-5">
-        <ShoppingCart
-          className="h-6 w-6 cursor-pointer text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
-        />
-        {darkTheme ? (
-          <Sun
-            className="cursor-pointer h-6 w-6 text-white hover:text-yellow-300"
-            onClick={() => setDarkTheme(false)}
+        <div className="relative">
+          <ShoppingCart
+            className="h-6 w-6 cursor-pointer text-gray-700 hover:text-black"
+            onClick={() => setIsCartSidebarOpen(true)}
           />
-        ) : (
-          <Moon
-            className="cursor-pointer h-6 w-6 text-white hover:text-gray-200"
-            onClick={() => setDarkTheme(true)}
-          />
-        )}
-        
+          {totalUniqueItems > 0 && (
+            <span className="absolute -top-2 -right-2 bg-[#ff5757] text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+              {totalUniqueItems}
+            </span>
+          )}
+        </div>
+
         {userEmail ? (
           <div className="relative" ref={dropdownRef}>
             <button
@@ -106,6 +95,12 @@ const HeadNav: React.FC<HeadNavProps> = ({ darkTheme, setDarkTheme }) => {
                   <p className="text-sm font-medium text-gray-800 truncate">{userEmail}</p>
                 </div>
                 <div className="border-t border-gray-200"></div>
+                <button
+                  onClick={() => { setIsAddressModalOpen(true); setIsDropdownOpen(false); }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Your Addresses
+                </button>
                 <button
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -124,6 +119,30 @@ const HeadNav: React.FC<HeadNavProps> = ({ darkTheme, setDarkTheme }) => {
           </button>
         )}
       </div>
+
+      {/* Cart Sidebar Component */}
+      <CartSidebar isOpen={isCartSidebarOpen} onClose={() => setIsCartSidebarOpen(false)} />
+
+      {/* Address Modal */}
+      <Dialog open={isAddressModalOpen} onOpenChange={setIsAddressModalOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Manage Your Addresses</DialogTitle>
+          </DialogHeader>
+          <AddressesModal onClose={() => setIsAddressModalOpen(false)} />
+        </DialogContent>
+      </Dialog>
+
+      {/* Overlay for when sidebar/modal is open with blur and glassy effect */}
+      {(isCartSidebarOpen || isAddressModalOpen) && (
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" // Adjust bg-opacity and backdrop-blur as needed
+          onClick={() => {
+            setIsCartSidebarOpen(false);
+            setIsAddressModalOpen(false);
+          }}
+        ></div>
+      )}
     </header>
   );
 }

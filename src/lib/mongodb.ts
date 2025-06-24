@@ -1,36 +1,35 @@
-import mongoose from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 
 const MONGODB_LOGIN_URI = process.env.MONGODB_LOGIN_URI;
 
 
 if (!MONGODB_LOGIN_URI) {
   throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
+    'Please define the MONGODB_LOGIN_URI environment variable inside .env.local'
   );
 }
 
-let cached = (global as any).mongoose;
+// Use a specific global cache for the login database connection
+let cachedLoginDb: { conn: Connection | null; promise: Promise<Connection> | null } = (global as any).mongooseLoginDb;
 
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+if (!cachedLoginDb) {
+  cachedLoginDb = (global as any).mongooseLoginDb = { conn: null, promise: null };
 }
 
-async function dbConnect() {
-  if (cached.conn) {
-    return cached.conn;
+async function connectLoginDb(): Promise<Connection> {
+  if (cachedLoginDb.conn) {
+    return cachedLoginDb.conn;
   }
 
-  if (!cached.promise) {
+  if (!cachedLoginDb.promise) {
     const opts = {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_LOGIN_URI!, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cachedLoginDb.promise = mongoose.createConnection(MONGODB_LOGIN_URI!, opts).asPromise();
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
+  cachedLoginDb.conn = await cachedLoginDb.promise;
+  return cachedLoginDb.conn;
 }
 
-export default dbConnect;
+export default connectLoginDb;

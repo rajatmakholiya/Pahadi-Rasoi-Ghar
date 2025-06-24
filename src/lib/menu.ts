@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 
 const MONGODB_MENU_URI = process.env.MONGODB_MENU_URI;
 
@@ -8,28 +8,27 @@ if (!MONGODB_MENU_URI) {
   );
 }
 
-let cached = (global as any).mongooseDefault;
+// Use a specific global cache for the menu database connection
+let cachedMenuDb: { conn: Connection | null; promise: Promise<Connection> | null } = (global as any).mongooseMenuDb;
 
-if (!cached) {
-  cached = (global as any).mongooseDefault = { conn: null, promise: null };
+if (!cachedMenuDb) {
+  cachedMenuDb = (global as any).mongooseMenuDb = { conn: null, promise: null };
 }
 
-async function dbConnect() {
-  if (cached.conn) {
-    return cached.conn;
+async function connectMenuDb(): Promise<Connection> {
+  if (cachedMenuDb.conn) {
+    return cachedMenuDb.conn;
   }
 
-  if (!cached.promise) {
+  if (!cachedMenuDb.promise) {
     const opts = {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_MENU_URI!, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cachedMenuDb.promise = mongoose.createConnection(MONGODB_MENU_URI!, opts).asPromise();
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
+  cachedMenuDb.conn = await cachedMenuDb.promise;
+  return cachedMenuDb.conn;
 }
 
-export default dbConnect;
+export default connectMenuDb;

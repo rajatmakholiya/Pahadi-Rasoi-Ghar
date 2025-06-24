@@ -1,9 +1,10 @@
-import dbConnect from '@/lib/menu';
-import MenuItem from '@/models/MenuItem';
+import connectMenuDb from '@/lib/menu'; // Renamed import
+import getMenuItemModel from '@/models/MenuItem'; // Changed to import the function
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-  await dbConnect();
+  const menuDbConnection = await connectMenuDb(); // Get the specific connection
+  const MenuItem = getMenuItemModel(menuDbConnection); // Get the MenuItem model associated with this connection
 
   try {
     const items = await MenuItem.find({});

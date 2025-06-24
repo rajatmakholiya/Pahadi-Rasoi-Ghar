@@ -35,14 +35,14 @@ const Contact = () => {
   };
 
   return (
-    <div className="  text-gray-900 dark:text-gray-100 px-4 sm:px-6 lg:px-8 dark:border-gray-300">
+    <div className="  text-gray-900 dark:text-gray-100 px-4 sm:px-6 lg:px-8 dark:border-gray-300 mb-10">
       <div className="max-w-4xl mx-auto bg-white dark:bg-[#1f1e1e] shadow-lg rounded-lg p-8 md:p-12">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
             Get in Touch
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300">
-            We'd love to hear from you! Please fill out the form below or reach out using our contact details.
+            We&apos;d love to hear from you! Please fill out the form below or reach out using our contact details.
           </p>
         </div>
 

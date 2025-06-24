@@ -1,27 +1,59 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, Model, Connection } from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: [true, 'Please provide an email.'],
-    unique: true,
-    match: [/.+@.+\..+/, 'Please provide a valid email address.'],
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password.'],
-    select: false, // Automatically exclude password from query results
-    unique:false
-  },
-  address: {
-    type: String,
-    required: false,
-  },
-  // You can add more fields here, like name, createdAt, etc.
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+export interface IAddress {
+  _id?: mongoose.Types.ObjectId;
+  fullName: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phoneNumber?: string;
+  isDefault?: boolean;
+}
+
+// Corrected IUser interface to use 'address' and the IAddress type
+export interface IUser extends Document {
+  email: string;
+  password: string;
+  address?: IAddress[];
+  createdAt: Date;
+}
+
+const AddressSchema: Schema = new Schema<IAddress>({
+  fullName: { type: String, required: true },
+  streetAddress: { type: String, required: true },
+  city: { type: String, required: true },
+  state: { type: String, required: true },
+  postalCode: { type: String, required: true },
+  country: { type: String, required: true },
+  phoneNumber: { type: String },
+  isDefault: { type: Boolean, default: false },
 });
 
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+export default function getUserModel(connection: Connection): Model<IUser> {
+  const UserSchema = new Schema<IUser>({
+    email: {
+      type: String,
+      required: [true, 'Please provide an email.'],
+      unique: true,
+      match: [/.+@.+\..+/, 'Please provide a valid email address.'],
+    },
+    password: {
+      type: String,
+      required: [true, 'Please provide a password.'],
+      select: false,
+    },
+    // The field name here is 'address', which is correct
+    address: {
+      type: [AddressSchema],
+      required: false,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  });
+
+  return connection.models.User || connection.model<IUser>('User', UserSchema);
+}

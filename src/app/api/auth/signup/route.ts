@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import User from '@/models/User';
+import connectLoginDb from '@/lib/mongodb'; // Renamed import
+import getUserModel from '@/models/User'; // Changed to import the function
 import bcrypt from 'bcryptjs';
 
 export async function POST(req: NextRequest) {
-  await dbConnect();
+  const loginDbConnection = await connectLoginDb(); // Get the specific connection
+  const User = getUserModel(loginDbConnection); // Get the User model associated with this connection
 
   try {
     const { email, password } = await req.json();
