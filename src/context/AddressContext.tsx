@@ -20,7 +20,7 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // This helper function is now correctly defined in the provider's scope
+  
   const getUserEmail = () => {
     return typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
   };
@@ -61,7 +61,7 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const userEmail = getUserEmail(); // This will now work
+      const userEmail = getUserEmail(); 
       if (!userEmail) {
         console.error("[AddressContext] Failed: User not logged in.");
         throw new Error('User not logged in.');

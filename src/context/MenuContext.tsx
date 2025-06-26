@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// Define the shape of a menu item
+
 interface Item {
   _id: string;
   name: string;
@@ -11,24 +11,24 @@ interface Item {
   imageUrl: string;
 }
 
-// Define the shape of the context state
+
 interface MenuContextState {
   items: Item[];
   loading: boolean;
   error: string | null;
 }
 
-// Create the context with a default undefined value
+
 const MenuContext = createContext<MenuContextState | undefined>(undefined);
 
-// Create the provider component
+
 export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // This effect runs only once to fetch the data for the entire app
+    
     const fetchItems = async () => {
       try {
         const res = await fetch('/api/items');
@@ -48,7 +48,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     };
 
     fetchItems();
-  }, []); // Empty dependency array ensures this runs only once
+  }, []); 
 
   const value = { items, loading, error };
 
@@ -59,7 +59,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Create a custom hook for easy access to the context
+
 export const useMenu = () => {
   const context = useContext(MenuContext);
   if (context === undefined) {

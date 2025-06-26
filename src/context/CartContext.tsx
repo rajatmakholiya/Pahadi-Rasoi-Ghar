@@ -1,9 +1,8 @@
-// src/context/CartContext.tsx
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// Define the shape of an item in the cart
+
 interface CartItem {
   _id: string;
   name: string;
@@ -11,25 +10,28 @@ interface CartItem {
   price: number;
   imageUrl: string;
   quantity: number;
+  
 }
 
-// Define the shape of the Cart Context state
+
 interface CartContextState {
   cartItems: CartItem[];
   addToCart: (item: Omit<CartItem, 'quantity'>) => void;
   increaseQuantity: (_id: string) => void;
   decreaseQuantity: (_id: string) => void;
   getQuantity: (_id: string) => number;
+  calculateCartTotal: () => string; 
+  clearCart: () => void;
 }
 
-// Create the context
+
 const CartContext = createContext<CartContextState | undefined>(undefined);
 
-// Create the provider component
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  // Load cart from localStorage on initial render
+  
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem('cartItems');
@@ -38,12 +40,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error) {
       console.error("Failed to load cart from localStorage:", error);
-      // Optionally clear corrupted data
+      
       localStorage.removeItem('cartItems');
     }
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  
   useEffect(() => {
     try {
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -56,12 +58,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((cartItem) => cartItem._id === item._id);
       if (existingItem) {
-        // If item exists, increase quantity
+        
         return prevItems.map((cartItem) =>
           cartItem._id === item._id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
         );
       } else {
-        // If item doesn't exist, add it with quantity 1
+        
         return [...prevItems, { ...item, quantity: 1 }];
       }
     });
@@ -79,9 +81,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item._id === _id
-          ? { ...item, quantity: Math.max(0, item.quantity - 1) } // Ensure quantity doesn't go below 0
+          ? { ...item, quantity: Math.max(0, item.quantity - 1) } 
           : item
-      ).filter(item => item.quantity > 0) // Remove item if quantity becomes 0
+      ).filter(item => item.quantity > 0) 
     );
   };
 
@@ -90,7 +92,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     return item ? item.quantity : 0;
   };
 
-  const value = { cartItems, addToCart, increaseQuantity, decreaseQuantity, getQuantity };
+  const calculateCartTotal = () => {
+    return cartItems.reduce((total, item) => {
+      const price = typeof item.price === 'string' ? parseFloat(item.price.replace('₹', '')) : item.price;
+      return total + (price * item.quantity);
+    }, 0).toFixed(2);
+  };
+  
+  const clearCart = () => {
+      setCartItems([]);
+  };
+
+  const value = { cartItems, addToCart, increaseQuantity, decreaseQuantity, getQuantity, calculateCartTotal, clearCart };
 
   return (
     <CartContext.Provider value={value}>
@@ -99,7 +112,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Custom hook to use the CartContext
+
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
