@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectLoginDb from '@/lib/mongodb'; // Renamed import
-import getUserModel from '@/models/User'; // Changed to import the function
+import connectLoginDb from '@/lib/mongodb'; 
+import getUserModel from '@/models/User'; 
 import bcrypt from 'bcryptjs';
 
 export async function POST(req: NextRequest) {
-  const loginDbConnection = await connectLoginDb(); // Get the specific connection
-  const User = getUserModel(loginDbConnection); // Get the User model associated with this connection
+  const loginDbConnection = await connectLoginDb(); 
+  const User = getUserModel(loginDbConnection); 
 
   try {
     const { email, password } = await req.json();
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { message: 'Login successful.', email: user.email }, // Return email on success
+      { message: 'Login successful.', email: user.email }, 
       { status: 200 }
     );
 

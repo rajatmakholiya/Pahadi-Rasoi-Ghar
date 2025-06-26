@@ -17,7 +17,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
-    // Use the correct field name: 'address'
     return NextResponse.json({ success: true, data: user.address || [] });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Server Error' }, { status: 500 });
@@ -41,7 +40,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
         }
 
-        // Use the correct field name: 'address'
         if (!user.address) {
             user.address = [];
         }
@@ -51,7 +49,7 @@ export async function POST(req: NextRequest) {
         }
 
         user.address.push(newAddress);
-        user.markModified('address'); // Mark the correct field as modified
+        user.markModified('address'); 
         await user.save();
 
         return NextResponse.json({ success: true, data: user.address });

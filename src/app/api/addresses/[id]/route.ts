@@ -20,7 +20,6 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
             return NextResponse.json({ success: false, error: 'User or address not found' }, { status: 404 });
         }
         
-        // Use the correct field name: 'address'
         const addressToUpdate = user.address.find(addr => addr._id?.toString() === addressId);
 
         if (!addressToUpdate) {
@@ -36,7 +35,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         }
 
         Object.assign(addressToUpdate, updatedAddress);
-        user.markModified('address'); // Mark the correct field as modified
+        user.markModified('address'); 
         await user.save();
 
         return NextResponse.json({ success: true, data: user.address });
@@ -63,7 +62,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
             return NextResponse.json({ success: false, error: 'User or address not found' }, { status: 404 });
         }
 
-        // Use the correct field name: 'address'
         user.address = user.address.filter(addr => addr._id?.toString() !== addressId);
         await user.save();
 
