@@ -8,7 +8,7 @@ if (!MONGODB_MENU_URI) {
   );
 }
 
-// Use a specific global cache for the menu database connection
+
 let cachedMenuDb: { conn: Connection | null; promise: Promise<Connection> | null } = (global as any).mongooseMenuDb;
 
 if (!cachedMenuDb) {

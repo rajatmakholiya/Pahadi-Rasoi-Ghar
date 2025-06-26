@@ -9,7 +9,7 @@ if (!MONGODB_LOGIN_URI) {
   );
 }
 
-// Use a specific global cache for the login database connection
+
 let cachedLoginDb: { conn: Connection | null; promise: Promise<Connection> | null } = (global as any).mongooseLoginDb;
 
 if (!cachedLoginDb) {
