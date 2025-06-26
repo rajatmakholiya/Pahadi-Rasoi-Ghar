@@ -1,4 +1,4 @@
-import { Document, Schema, Model, Connection } from 'mongoose'; // Import Connection
+import { Document, Schema, Model, Connection } from 'mongoose'; 
 
 export interface IMenuItem extends Document {
   name: string;
@@ -34,13 +34,13 @@ const MenuItemSchema: Schema<IMenuItem> = new Schema(
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt automatically
-    collection: 'ItemList', // Explicitly set the collection name
+    timestamps: true, 
+    collection: 'ItemList', 
   }
 );
 
-// Export a function that takes a connection and returns the MenuItem model
+
 export default function getMenuItemModel(connection: Connection): Model<IMenuItem> {
-  // To prevent model recompilation in Next.js hot-reloading environments
+  
   return connection.models.MenuItem || connection.model<IMenuItem>('MenuItem', MenuItemSchema);
 }

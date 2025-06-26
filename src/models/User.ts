@@ -11,8 +11,6 @@ export interface IAddress {
   phoneNumber?: string;
   isDefault?: boolean;
 }
-
-// Corrected IUser interface to use 'address' and the IAddress type
 export interface IUser extends Document {
   email: string;
   password: string;
@@ -44,7 +42,6 @@ export default function getUserModel(connection: Connection): Model<IUser> {
       required: [true, 'Please provide a password.'],
       select: false,
     },
-    // The field name here is 'address', which is correct
     address: {
       type: [AddressSchema],
       required: false,
