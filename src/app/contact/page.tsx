@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input"; // Assuming this path
-import { Textarea } from "@/components/ui/textarea"; // Assuming this path
-import { Button } from "@/components/ui/button"; // Assuming this path
-import { Label } from "@/components/ui/label"; // Assuming this path
-import { Mail, Phone, MapPin, Facebook, Instagram, Twitter } from 'lucide-react'; // For icons
+import { Input } from "@/components/ui/input"; 
+import { Textarea } from "@/components/ui/textarea"; 
+import { Button } from "@/components/ui/button"; 
+import { Label } from "@/components/ui/label"; 
+import { Mail, Phone, MapPin, Facebook, Instagram, Twitter } from 'lucide-react'; 
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +24,7 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // In a real application, you would send this data to a backend API
+    
     console.log('Form submitted:', formData);
     alert('Thank you for your message! We will get back to you soon.');
     setFormData({
@@ -47,7 +47,7 @@ const Contact = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Contact Form */}
+          
           <div className="order-2 md:order-1">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send Us a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -102,7 +102,7 @@ const Contact = () => {
             </form>
           </div>
 
-          {/* Contact Information */}
+          
           <div className="order-1 md:order-2 bg-gray-100 dark:bg-[#1f1e1e] rounded-lg p-6 flex flex-col justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Contact Information</h2>
@@ -126,7 +126,7 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Social Media Links */}
+            
             <div className="mt-8">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Follow Us</h3>
               <div className="flex space-x-4">

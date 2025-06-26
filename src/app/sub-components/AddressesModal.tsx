@@ -102,7 +102,8 @@ const AddressesModal = ({ onClose }: { onClose: () => void }) => {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="gap-2">
+              <div className="space-y-4 max-h-[70vh]">
             {isFormOpen ? (
                 <AddressForm 
                     address={editingAddress}
@@ -110,11 +111,11 @@ const AddressesModal = ({ onClose }: { onClose: () => void }) => {
                     onCancel={() => setIsFormOpen(false)} 
                 />
             ) : (
-                <div className="space-y-4">
+                <div className="space-y-4 overflow-y-auto max-h-[70vh] ">
                     {addresses.map((address) => (
-                        // FIX: Added the unique key prop to the Card component
-                        <Card  key={address._id?.toString()}>
-                            <CardContent className="flex items-start justify-between p-4">
+                        
+                        <Card  key={address._id?.toString()} >
+                            <CardContent className="flex items-start justify-between p-4 ">
                                 <div>
                                     <p className="font-semibold">{address.fullName} {address.isDefault && <span className="text-xs bg-green-200 text-green-800 p-1 rounded-md ml-2">Default</span>}</p>
                                     <p>{address.streetAddress}</p>
@@ -133,13 +134,18 @@ const AddressesModal = ({ onClose }: { onClose: () => void }) => {
                             </CardContent>
                         </Card>
                     ))}
-                     <Button onClick={handleAddNew} className="mt-4">
-                        <PlusCircle className="mr-2 h-4 w-4" /> Add New Address
-                    </Button>
+                    
                 </div>
+                
             )}
+            
              {error && <p className="text-red-500 mt-2">{error}</p>}
         </div>
+         <Button onClick={handleAddNew} className="mt-4">
+                        <PlusCircle className="mr-2 h-4 w-4" /> Add New Address
+                    </Button>
+        </div>
+      
     );
 };
 

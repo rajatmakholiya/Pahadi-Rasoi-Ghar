@@ -41,7 +41,7 @@ const Login = () => {
 
       if (res.ok) {
         if (data.email) {
-          localStorage.setItem('userEmail', data.email); // Store email
+          localStorage.setItem('userEmail', data.email); 
         }
         router.push('/');
       } else {
@@ -57,7 +57,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-      {/* Left side with image */}
+      
       <div className="relative hidden lg:block">
         <Image
           src={LoginImage}
@@ -73,7 +73,7 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right side with login form */}
+      
       <div className="flex items-center justify-center p-8 sm:p-12 bg-gray-50 dark:bg-gray-900">
         <div className="w-full max-w-md space-y-8">
           <div>

@@ -1,4 +1,3 @@
-// src/app/sub-components/ItemCard.tsx
 import React from "react";
 import Image from "next/image";
 import {
@@ -13,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 
 interface ItemCardProps {
-  _id: string; // Add _id to props to identify the item
+  _id: string; 
   imageUrl: string;
   imageAlt?: string;
   title: string;
@@ -23,7 +22,7 @@ interface ItemCardProps {
 }
 
 const ItemCard: React.FC<ItemCardProps> = ({
-  _id, // Destructure _id
+  _id, 
   imageUrl,
   imageAlt = "Item image",
   title,

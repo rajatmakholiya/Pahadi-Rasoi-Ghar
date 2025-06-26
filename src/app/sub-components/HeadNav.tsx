@@ -1,4 +1,3 @@
-// src/app/sub-components/HeadNav.tsx
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import Image from "next/image";
@@ -16,7 +15,7 @@ const HeadNav: React.FC = () => {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCartSidebarOpen, setIsCartSidebarOpen] = useState(false);
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false); // State for the address modal
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false); 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { cartItems } = useCart();
@@ -120,23 +119,24 @@ const HeadNav: React.FC = () => {
         )}
       </div>
 
-      {/* Cart Sidebar Component */}
+      
       <CartSidebar isOpen={isCartSidebarOpen} onClose={() => setIsCartSidebarOpen(false)} />
 
-      {/* Address Modal */}
+      
       <Dialog open={isAddressModalOpen} onOpenChange={setIsAddressModalOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Manage Your Addresses</DialogTitle>
           </DialogHeader>
           <AddressesModal onClose={() => setIsAddressModalOpen(false)} />
+            
         </DialogContent>
       </Dialog>
 
-      {/* Overlay for when sidebar/modal is open with blur and glassy effect */}
+      
       {(isCartSidebarOpen || isAddressModalOpen) && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" // Adjust bg-opacity and backdrop-blur as needed
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" 
           onClick={() => {
             setIsCartSidebarOpen(false);
             setIsAddressModalOpen(false);

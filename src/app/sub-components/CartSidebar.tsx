@@ -1,10 +1,12 @@
-// src/app/sub-components/CartSidebar.tsx
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { X, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import PlaceOrderModal from './PlaceOrderModal';
+import { toast } from 'sonner';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -12,20 +14,22 @@ interface CartSidebarProps {
 }
 
 const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
-  const { cartItems, increaseQuantity, decreaseQuantity } = useCart();
+  const { cartItems, increaseQuantity, decreaseQuantity, calculateCartTotal, clearCart } = useCart();
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
   const calculateItemTotalPrice = (item: any) => {
-    // Ensure item.price is treated as a number
     const price = typeof item.price === 'string' ? parseFloat(item.price.replace('₹', '')) : item.price;
     return (price * item.quantity).toFixed(2);
   };
 
-  const calculateCartTotal = () => {
-    return cartItems.reduce((total, item) => {
-      const price = typeof item.price === 'string' ? parseFloat(item.price.replace('₹', '')) : item.price;
-      return total + (price * item.quantity);
-    }, 0).toFixed(2);
-  };
+  const handleOrderPlaced = () => {
+      
+      clearCart();
+      setIsOrderModalOpen(false);
+      onClose();
+      
+      toast.success("Order placed successfully!");
+  }
 
   return (
     <div
@@ -37,7 +41,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={onClose} 
+          onClick={onClose}
           className="text-gray-500 hover:text-gray-700"
         >
           <X className="h-6 w-6" />
@@ -53,9 +57,8 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
           </div>
         ) : (
           <ul className="space-y-4">
-            {cartItems.map((item) => ( 
+            {cartItems.map((item) => (
               <li key={item._id} className="flex items-center space-x-4 p-2 bg-gray-50 rounded-md">
-               
                 <div className="flex-1">
                   <h3 className="text-md font-medium text-gray-900">{item.name}</h3>
                   <p className="text-sm text-gray-600">Price: ₹{(typeof item.price === 'string' ? parseFloat(item.price.replace('₹', '')) : item.price).toFixed(2)}</p>
@@ -87,18 +90,32 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
           </ul>
         )}
       </div>
- 
+
       <div className="p-4 border-t">
         <div className="flex justify-between items-center mb-4">
           <span className="text-lg font-semibold text-gray-900">Total:</span>
           <span className="text-lg font-bold text-[#ff5757]">₹{calculateCartTotal()}</span>
         </div>
-        <Button
-          className="w-full bg-[#ff5757] text-white py-2 rounded-md hover:bg-[#e64a4a] transition-colors duration-300"
-          disabled={cartItems.length === 0}
-        >
-          Place Order
-        </Button>
+        
+        <Dialog open={isOrderModalOpen} onOpenChange={setIsOrderModalOpen}>
+            <DialogTrigger asChild>
+                <Button
+                  className="w-full bg-[#ff5757] text-white py-2 rounded-md hover:bg-[#e64a4a] transition-colors duration-300"
+                  disabled={cartItems.length === 0}
+                >
+                  Place Order
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                    <DialogTitle>Confirm Your Order</DialogTitle>
+                </DialogHeader>
+                <PlaceOrderModal
+                    onClose={() => setIsOrderModalOpen(false)}
+                    onOrderPlaced={handleOrderPlaced}
+                />
+            </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
