@@ -1,26 +1,26 @@
-// src/app/layout.tsx
 "use client";
 import React from "react";
-import { Inter, Playfair_Display, Lora } from "next/font/google"; // Import Lora
+import { Inter, Playfair_Display, Lora } from "next/font/google";
 import { usePathname } from "next/navigation";
 import "./globals.css";
 import HeadNav from "./sub-components/HeadNav";
 import { MenuProvider } from "../context/MenuContext";
 import { CartProvider } from "@/context/CartContext";
 import { AddressProvider } from "@/context/AddressContext";
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ["latin"] });
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "700"], // Specify weights you want to use
-  variable: "--font-playfair-display", // Ensure it's set up as a CSS variable
+  weight: ["400", "700"],
+  variable: "--font-playfair-display",
 });
 
-const lora = Lora({ // Instantiate Lora
+const lora = Lora({
   subsets: ["latin"],
-  weight: ["400", "700"], // Specify weights you want to use
-  variable: "--font-lora", // Define as CSS variable
+  weight: ["400", "700"],
+  variable: "--font-lora",
 });
 
 export default function RootLayout({
@@ -34,7 +34,6 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      {/* Add Lora's variable to the body class */}
       <body className={`${inter.className} ${playfairDisplay.variable} ${lora.variable}`}>
         <MenuProvider>
           <CartProvider>
@@ -59,6 +58,7 @@ export default function RootLayout({
             </AddressProvider>
           </CartProvider>
         </MenuProvider>
+        <Toaster />
       </body>
     </html>
   );

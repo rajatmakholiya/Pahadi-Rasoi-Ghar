@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
-import { Utensils, Sparkles, HeartHandshake, Leaf } from 'lucide-react'; // Icons for values
-import { Button } from "@/components/ui/button"; // Assuming this path
+import { Utensils, Sparkles, HeartHandshake, Leaf } from 'lucide-react'; 
+import { Button } from "@/components/ui/button"; 
 import Link from 'next/link';
 
  const About = () => {
@@ -17,7 +17,6 @@ import Link from 'next/link';
           </p>
         </div>
 
-        {/* Our Story Section */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
             <Utensils className="h-6 w-6 mr-3 text-[#ff5757]" /> Our Story
@@ -39,7 +38,6 @@ import Link from 'next/link';
           </p>
         </section>
 
-        {/* Our Mission Section */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
             <Sparkles className="h-6 w-6 mr-3 text-[#ff5757]" /> Our Mission
@@ -53,7 +51,6 @@ import Link from 'next/link';
           </p>
         </section>
 
-        {/* Our Values Section */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
             <HeartHandshake className="h-6 w-6 mr-3 text-[#ff5757]" /> Our Values
