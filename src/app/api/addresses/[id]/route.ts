@@ -2,14 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectLoginDb from '@/lib/mongodb';
 import getUserModel, { IAddress } from '@/models/User';
 
-// Define a type for the context object that includes the params
-interface IContext {
-  params: {
-    id: string;
-  };
-}
-
-export async function PUT(request: NextRequest, context: IContext) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -20,7 +16,7 @@ export async function PUT(request: NextRequest, context: IContext) {
     }
 
     const updatedAddress: IAddress = await request.json();
-    const addressId = context.params.id; // Access id from the context object
+    const addressId = params.id;
     const user = await User.findOne({ email: userEmail });
 
     if (!user || !user.address) {
@@ -52,7 +48,10 @@ export async function PUT(request: NextRequest, context: IContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: IContext) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -62,7 +61,7 @@ export async function DELETE(request: NextRequest, context: IContext) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const addressId = context.params.id; // Access id from the context object
+    const addressId = params.id;
     const user = await User.findOne({ email: userEmail });
 
     if (!user || !user.address) {
