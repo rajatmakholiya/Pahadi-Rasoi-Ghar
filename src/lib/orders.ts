@@ -8,11 +8,14 @@ if (!MONGODB_ORDERS_URI) {
   );
 }
 
+declare global {
+  var mongooseOrdersDb: { conn: Connection | null; promise: Promise<Connection> | null };
+}
 
-let cachedOrdersDb: { conn: Connection | null; promise: Promise<Connection> | null } = (global as any).mongooseOrdersDb;
+let cachedOrdersDb = global.mongooseOrdersDb;
 
 if (!cachedOrdersDb) {
-  cachedOrdersDb = (global as any).mongooseOrdersDb = { conn: null, promise: null };
+  cachedOrdersDb = global.mongooseOrdersDb = { conn: null, promise: null };
 }
 
 async function connectOrdersDb(): Promise<Connection> {

@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: user.address || [] });
   } catch (error) {
-    return NextResponse.json({ success: false, error: 'Server Error' }, { status: 500 });
+    return NextResponse.json({ success: false, error: `Server Error, ${error}` }, { status: 500 });
   }
 }
 

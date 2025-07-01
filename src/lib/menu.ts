@@ -8,11 +8,14 @@ if (!MONGODB_MENU_URI) {
   );
 }
 
+declare global {
+  var mongooseMenuDb: { conn: Connection | null; promise: Promise<Connection> | null };
+}
 
-let cachedMenuDb: { conn: Connection | null; promise: Promise<Connection> | null } = (global as any).mongooseMenuDb;
+let cachedMenuDb = global.mongooseMenuDb;
 
 if (!cachedMenuDb) {
-  cachedMenuDb = (global as any).mongooseMenuDb = { conn: null, promise: null };
+  cachedMenuDb = global.mongooseMenuDb = { conn: null, promise: null };
 }
 
 async function connectMenuDb(): Promise<Connection> {

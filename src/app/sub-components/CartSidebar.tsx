@@ -13,11 +13,18 @@ interface CartSidebarProps {
   onClose: () => void;
 }
 
+interface CartItem {
+  _id: string;
+  name: string;
+  price: number | string;
+  quantity: number;
+}
+
 const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
   const { cartItems, increaseQuantity, decreaseQuantity, calculateCartTotal, clearCart } = useCart();
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
-  const calculateItemTotalPrice = (item: any) => {
+  const calculateItemTotalPrice = (item: CartItem) => {
     const price = typeof item.price === 'string' ? parseFloat(item.price.replace('₹', '')) : item.price;
     return (price * item.quantity).toFixed(2);
   };
@@ -61,7 +68,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
               <li key={item._id} className="flex items-center space-x-4 p-2 bg-gray-50 rounded-md">
                 <div className="flex-1">
                   <h3 className="text-md font-medium text-gray-900">{item.name}</h3>
-                  <p className="text-sm text-gray-600">Price: ₹{(typeof item.price === 'string' ? parseFloat(item.price.replace('₹', '')) : item.price).toFixed(2)}</p>
+                  <p className="text-sm text-gray-600">Price: ₹{(typeof item.price === 'string' ? parseFloat(item.price?.replace('₹', '')) : item.price).toFixed(2)}</p>
                   <div className="flex items-center mt-1">
                     <Button
                       variant="outline"

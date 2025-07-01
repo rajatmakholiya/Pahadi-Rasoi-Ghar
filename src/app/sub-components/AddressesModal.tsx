@@ -76,7 +76,7 @@ const AddressForm = ({ address, onSave, onCancel }: { address?: IAddress, onSave
 };
 
 
-const AddressesModal = ({ onClose }: { onClose: () => void }) => {
+const AddressesModal = ({}: { onClose: () => void }) => {
     const { addresses, addAddress, updateAddress, deleteAddress, error } = useAddress();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingAddress, setEditingAddress] = useState<IAddress | undefined>(undefined);

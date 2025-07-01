@@ -9,11 +9,14 @@ if (!MONGODB_LOGIN_URI) {
   );
 }
 
+declare global {
+  var mongooseLoginDb: { conn: Connection | null; promise: Promise<Connection> | null };
+}
 
-let cachedLoginDb: { conn: Connection | null; promise: Promise<Connection> | null } = (global as any).mongooseLoginDb;
+let cachedLoginDb = global.mongooseLoginDb;
 
 if (!cachedLoginDb) {
-  cachedLoginDb = (global as any).mongooseLoginDb = { conn: null, promise: null };
+  cachedLoginDb = global.mongooseLoginDb = { conn: null, promise: null };
 }
 
 async function connectLoginDb(): Promise<Connection> {
