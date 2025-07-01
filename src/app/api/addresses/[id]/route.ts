@@ -2,7 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectLoginDb from '@/lib/mongodb';
 import getUserModel, { IAddress } from '@/models/User';
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+type TContext = {
+    params: {
+        id: string;
+    }
+}
+
+export async function PUT(req: NextRequest, context: TContext) {
     const loginDbConnection = await connectLoginDb();
     const User = getUserModel(loginDbConnection);
 
@@ -13,7 +19,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         }
 
         const updatedAddress: IAddress = await req.json();
-        const addressId = params.id;
+        const addressId = context.params.id;
         const user = await User.findOne({ email: userEmail });
 
         if (!user || !user.address) {
@@ -45,7 +51,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: TContext) {
     const loginDbConnection = await connectLoginDb();
     const User = getUserModel(loginDbConnection);
 
@@ -55,7 +61,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
             return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
         }
 
-        const addressId = params.id;
+        const addressId = context.params.id;
         const user = await User.findOne({ email: userEmail });
 
         if (!user || !user.address) {
