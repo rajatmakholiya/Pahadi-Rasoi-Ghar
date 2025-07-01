@@ -5,7 +5,7 @@ import getUserModel, { IAddress } from '@/models/User';
 
 export async function PUT(
   request: NextRequest,
-  context: { params: Record<string, string | string[]> }
+ context: { params: { [key: string]: string | string[] } }
 ) {
   const { id } = context.params;
   const addressId = Array.isArray(id) ? id[0] : id;
@@ -52,7 +52,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: Record<string, string | string[]> }
+  context: { params: { [key: string]: string | string[] } }
 ) {
   const { id } = context.params;
   const addressId = Array.isArray(id) ? id[0] : id;
