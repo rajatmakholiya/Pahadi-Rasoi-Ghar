@@ -10,9 +10,9 @@ type ContextType = {
 
 export async function PUT(
 request: NextRequest,
-body: ContextType
+body: Promise<ContextType>
 ) {
-  const id = body.params.id;
+  const id = await body;
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -29,7 +29,7 @@ body: ContextType
       return NextResponse.json({ success: false, error: 'User or address not found' }, { status: 404 });
     }
     
-    const addressToUpdate = user.address.find(addr => addr._id?.toString() === id);
+    const addressToUpdate = user.address.find(addr => addr._id?.toString() === id.params.id);
 
     if (!addressToUpdate) {
       return NextResponse.json({ success: false, error: 'Address not found' }, { status: 404 });
@@ -37,7 +37,7 @@ body: ContextType
     
     if (updatedAddress.isDefault) {
       user.address.forEach(addr => {
-        if (addr._id?.toString() !== id) {
+        if (addr._id?.toString() !== id.params.id) {
           addr.isDefault = false;
         }
       });
