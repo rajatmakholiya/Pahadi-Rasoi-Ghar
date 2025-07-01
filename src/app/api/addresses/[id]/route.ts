@@ -2,11 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectLoginDb from '@/lib/mongodb';
 import getUserModel, { IAddress } from '@/models/User';
 
+type ContextType = {
+  params: {
+    id: string;
+  };
+};
+
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }  
+request: NextRequest,
+body: ContextType
 ) {
-  const { id } = params; 
+  const id = body.params.id;
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -49,10 +55,10 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }  
+ request: NextRequest,
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
+  const id = context.params.id;
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
