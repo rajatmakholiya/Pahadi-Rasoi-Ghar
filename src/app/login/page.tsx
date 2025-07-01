@@ -47,7 +47,8 @@ const Login = () => {
       } else {
         setError(data.message || 'An error occurred.');
       }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       setError(error.message || 'An unexpected error occurred.');
     } finally {
       setIsLoading(false);

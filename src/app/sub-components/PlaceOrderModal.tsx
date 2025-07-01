@@ -139,7 +139,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({ onClose, onOrderPlace
             {step === 2 && (
                  <div>
                     <h3 className="text-lg font-semibold mb-4">Select Delivery Time</h3>
-                    <RadioGroup defaultValue="Immediate" onValueChange={setDeliveryType}>
+                    <RadioGroup defaultValue="Immediate" onValueChange={(value) => setDeliveryType(value as 'Immediate' | 'Scheduled')}>
                         <div className="flex items-center space-x-2">
                             <RadioGroupItem value="Immediate" id="immediate" />
                             <Label htmlFor="immediate">Immediate Delivery</Label>
