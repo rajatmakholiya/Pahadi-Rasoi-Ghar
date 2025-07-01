@@ -1,16 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import connectLoginDb from '@/lib/mongodb';
 import getUserModel, { IAddress } from '@/models/User';
 
-type ContextType = {
-  params: {
-    id: string;
-  };
-};
 
 export async function PUT(
 request: NextRequest,
-body: Promise<ContextType>
+body: any
 ) {
   const id = await body;
   const loginDbConnection = await connectLoginDb();
@@ -56,9 +52,9 @@ body: Promise<ContextType>
 
 export async function DELETE(
  request: NextRequest,
-  context: { params: { id: string } }
+  context: Promise<{params: { id: string } }>
 ) {
-  const id = context.params.id;
+  const id = await context;
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -74,7 +70,7 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'User or address not found' }, { status: 404 });
     }
 
-    user.address = user.address.filter(addr => addr._id?.toString() !== id);
+    user.address = user.address.filter(addr => addr._id?.toString() !== id.params.id);
     await user.save();
 
     return NextResponse.json({ success: true, data: user.address });
