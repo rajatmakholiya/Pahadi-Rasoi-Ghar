@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 
 interface ItemCardProps {
-  _id: string; 
+  _id: string;
   imageUrl: string;
   imageAlt?: string;
   title: string;
@@ -22,19 +22,26 @@ interface ItemCardProps {
 }
 
 const ItemCard: React.FC<ItemCardProps> = ({
-  _id, 
+  _id,
   imageUrl,
   imageAlt = "Item image",
   title,
   description,
   price,
-  className
+  className,
 }) => {
-  const { addToCart, increaseQuantity, decreaseQuantity, getQuantity } = useCart();
+  const { addToCart, increaseQuantity, decreaseQuantity, getQuantity } =
+    useCart();
   const quantity = getQuantity(_id);
 
   const handleAddToCartClick = () => {
-    addToCart({ _id, name: title, description, price: typeof price === 'string' ? parseFloat(price.replace('₹', '')) : price, imageUrl });
+    addToCart({
+      _id,
+      name: title,
+      description,
+      price: typeof price === "string" ? parseFloat(price.replace("₹", "")) : price,
+      imageUrl,
+    });
   };
 
   const handleIncrease = () => {
@@ -46,9 +53,11 @@ const ItemCard: React.FC<ItemCardProps> = ({
   };
 
   return (
-    <Card className={`w-[300px] flex flex-col justify-between border-none shadow-none gap-[2] ${className}`}>
-      <CardContent className="p-0 overflow-hidden ">
-        <div className="relative w-full h-[12.5rem] mb-3">
+    <Card
+      className={`w-full max-w-sm flex flex-col justify-between border-none shadow-none gap-2 ${className}`}
+    >
+      <CardContent className="p-0 overflow-hidden">
+        <div className="relative w-full h-48 sm:h-52 mb-3">
           <Image
             src={imageUrl}
             alt={imageAlt}
@@ -72,7 +81,11 @@ const ItemCard: React.FC<ItemCardProps> = ({
           <Button onClick={handleAddToCartClick}>Add to Cart</Button>
         ) : (
           <div className="flex items-center space-x-2">
-            <Button size="sm" onClick={handleDecrease} disabled={quantity === 0}>
+            <Button
+              size="sm"
+              onClick={handleDecrease}
+              disabled={quantity === 0}
+            >
               -
             </Button>
             <span className="font-semibold">{quantity}</span>

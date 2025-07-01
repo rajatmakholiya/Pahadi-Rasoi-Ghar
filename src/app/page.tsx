@@ -14,37 +14,40 @@ function Home() {
   return (
     <Fragment>
       <Head>
-        <title>Pahadi Rasoi Ghar</title> 
+        <title>Pahadi Rasoi Ghar</title>
         <meta name="description" content="Welcome to Pahadi Rasoi Ghar" />
       </Head>
       <div className="min-h-screen">
         <div className="relative bg-gradient-to-b from-[#f6c448] via-[#f6ab48] to-[#fc7060]">
-          <div className="flex flex-row items-center justify-between px-25 gap-10 pb-25 ">
-            <div className="flex flex-col items-center gap-10">
-              <h1 className="text-5xl font-bold font-sans text-center">
+          <div className="flex flex-col md:flex-row items-center justify-between px-4 sm:px-12 lg:px-24 gap-10 pb-24">
+            <div className="flex flex-col items-center gap-10 text-center md:text-left">
+              <h1 className="text-4xl md:text-5xl font-bold font-sans">
                 Experience the authentic taste of the mountains with our
                 traditional Pahadi cuisine.
               </h1>
-              <div className="flex flex-row justify-between items-center gap-15">
+              <div className="flex flex-row justify-center items-center gap-4">
                 <Link
                   href="/menu"
-                  className="text-md font-medium px-10 py-2 rounded-md shadow-sm ease-in-out bg-[#ff5757] text-white hover:bg-[#e64a4a] transition-colors duration-150"
+                  className="text-md font-medium px-8 py-2 rounded-md shadow-sm ease-in-out bg-[#ff5757] text-white hover:bg-[#e64a4a] transition-colors duration-150"
                 >
                   Menu
                 </Link>
                 <Link
                   href="/"
-                  className="text-md font-medium px-10 py-2 rounded-md shadow-sm ease-in-out bg-amber-50 transition-colors duration-150"
+                  className="text-md font-medium px-8 py-2 rounded-md shadow-sm ease-in-out bg-amber-50 transition-colors duration-150"
                 >
                   Reviews
                 </Link>
               </div>
             </div>
-            <Image
-              src={HomeImage}
-              alt="Pahadi Rasoi Ghar"
-              className="max-w-130 max-h-130"
-            />
+            <div className="w-full max-w-xs md:max-w-md lg:max-w-lg">
+              <Image
+                src={HomeImage}
+                alt="Pahadi Rasoi Ghar"
+                className="w-full h-auto"
+                priority
+              />
+            </div>
           </div>
           <div
             className="absolute bottom-0 left-0 w-full overflow-hidden leading-none"
@@ -64,12 +67,12 @@ function Home() {
           </div>
         </div>
 
-        <div className="px-25 bg-white pb-5">
+        <div className="px-4 sm:px-12 lg:px-24 bg-white pb-5">
           <h2 className="text-3xl font-bold text-center mb-10">Our Specials</h2>
           {loading ? (
             <p className="text-center">Loading items...</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
               {items.slice(0, 4).map((item) => (
                 <ItemCard
                   key={item._id}

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import LightModeLogo from "../../assets/darkmode_logo.png";
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import CartSidebar from './CartSidebar';
 import { useCart } from '@/context/CartContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -15,7 +15,8 @@ const HeadNav: React.FC = () => {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCartSidebarOpen, setIsCartSidebarOpen] = useState(false);
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false); 
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { cartItems } = useCart();
@@ -49,22 +50,24 @@ const HeadNav: React.FC = () => {
   const totalUniqueItems = cartItems.length;
 
   return (
-    <header className="flex flex-row items-center justify-between w-full px-20 py-2 transition-colors duration-300 ease-in-out">
-      <Image
-        src={LightModeLogo}
-        alt="PRG Logo"
-        className="w-32 h-15 sm:w-32 sm:h-18"
-        width={200}
-        height={200}
-        priority
-      />
+    <header className="flex flex-row items-center justify-between w-full px-6 sm:px-8 md:px-12 lg:px-20 py-2 transition-colors duration-300 ease-in-out">
+      <Link href="/">
+        <Image
+          src={LightModeLogo}
+          alt="PRG Logo"
+          className="w-24 sm:w-32 h-auto"
+          width={200}
+          height={200}
+          priority
+        />
+      </Link>
 
-      <div className="flex flex-row items-center justify-center gap-15 w-full px-6 py-3 text-gray-800">
+      <nav className="hidden md:flex flex-row items-center justify-center gap-8 lg:gap-15 w-full text-gray-800">
         <Link href="/">Home</Link>
         <Link href="/menu">Menu</Link>
         <Link href="/about">About Us</Link>
         <Link href="/contact">Contact</Link>
-      </div>
+      </nav>
 
       <div className="flex items-center space-x-4 sm:space-x-5">
         <div className="relative">
@@ -111,35 +114,58 @@ const HeadNav: React.FC = () => {
           </div>
         ) : (
           <button
-            className={`px-4 py-2 rounded-md font-semibold text-sm shadow-sm transition-colors duration-150 ease-in-out bg-[#ff5757] text-white whitespace-nowrap hover:bg-[#e64a4a] active:bg-[#cc3f3f]`}
+            className={`hidden sm:block px-4 py-2 rounded-md font-semibold text-sm shadow-sm transition-colors duration-150 ease-in-out bg-[#ff5757] text-white whitespace-nowrap hover:bg-[#e64a4a] active:bg-[#cc3f3f]`}
             onClick={handleSignInClick}
           >
             Sign In
           </button>
         )}
+
+        <div className="md:hidden">
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
-      
+      <div className={`absolute top-16 w-[90vw] h[100vh] text-white backdrop-opacity-60 md:hidden z-50 transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-screen opacity-100 pointer-events-auto' : 'max-h-0 opacity-0 pointer-events-none overflow-hidden'}`}>
+        <nav className="flex flex-col items-center gap-4 p-4">
+          <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+          <Link href="/menu" onClick={() => setIsMobileMenuOpen(false)}>Menu</Link>
+          <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>About Us</Link>
+          <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+          {!userEmail && (
+            <button
+              className={`px-4 py-2 rounded-md font-semibold text-sm shadow-sm transition-colors duration-150 ease-in-out bg-[#ff5757] text-white whitespace-nowrap hover:bg-[#e64a4a] active:bg-[#cc3f3f]`}
+              onClick={() => {
+                handleSignInClick();
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              Sign In
+            </button>
+          )}
+        </nav>
+      </div>
+
       <CartSidebar isOpen={isCartSidebarOpen} onClose={() => setIsCartSidebarOpen(false)} />
 
-      
       <Dialog open={isAddressModalOpen} onOpenChange={setIsAddressModalOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Manage Your Addresses</DialogTitle>
           </DialogHeader>
           <AddressesModal onClose={() => setIsAddressModalOpen(false)} />
-            
         </DialogContent>
       </Dialog>
 
-      
-      {(isCartSidebarOpen || isAddressModalOpen) && (
+      {(isCartSidebarOpen || isAddressModalOpen || isMobileMenuOpen) && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" 
+          className="fixed inset-0 bg-black/30 backdrop-blur-lg z-40"
           onClick={() => {
             setIsCartSidebarOpen(false);
             setIsAddressModalOpen(false);
+            setIsMobileMenuOpen(false);
           }}
         ></div>
       )}
