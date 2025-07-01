@@ -2,13 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectLoginDb from '@/lib/mongodb';
 import getUserModel, { IAddress } from '@/models/User';
 
-
 export async function PUT(
   request: NextRequest,
- context: { params: { [key: string]: string | string[] } }
+  { params }: { params: { id: string } }  
 ) {
-  const { id } = context.params;
-  const addressId = Array.isArray(id) ? id[0] : id;
+  const { id } = params; 
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -25,7 +23,7 @@ export async function PUT(
       return NextResponse.json({ success: false, error: 'User or address not found' }, { status: 404 });
     }
     
-    const addressToUpdate = user.address.find(addr => addr._id?.toString() === addressId);
+    const addressToUpdate = user.address.find(addr => addr._id?.toString() === id);
 
     if (!addressToUpdate) {
       return NextResponse.json({ success: false, error: 'Address not found' }, { status: 404 });
@@ -33,7 +31,7 @@ export async function PUT(
     
     if (updatedAddress.isDefault) {
       user.address.forEach(addr => {
-        if (addr._id?.toString() !== addressId) {
+        if (addr._id?.toString() !== id) {
           addr.isDefault = false;
         }
       });
@@ -52,10 +50,9 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { [key: string]: string | string[] } }
+  { params }: { params: { id: string } }  
 ) {
-  const { id } = context.params;
-  const addressId = Array.isArray(id) ? id[0] : id;
+  const { id } = params;
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -71,7 +68,7 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'User or address not found' }, { status: 404 });
     }
 
-    user.address = user.address.filter(addr => addr._id?.toString() !== addressId);
+    user.address = user.address.filter(addr => addr._id?.toString() !== id);
     await user.save();
 
     return NextResponse.json({ success: true, data: user.address });
