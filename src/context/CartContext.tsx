@@ -7,7 +7,7 @@ interface CartItem {
   _id: string;
   name: string;
   description: string;
-  price: number;
+  price: number | string;
   imageUrl: string;
   quantity: number;
   
@@ -94,7 +94,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const calculateCartTotal = () => {
     return cartItems.reduce((total, item) => {
-      const price = typeof item.price === 'string' ? parseFloat(item.price.replace('₹', '')) : item.price;
+      const price = typeof item.price === 'string' ? parseFloat(item.price.replace('₹', '')) : item.price as number;
       return total + (price * item.quantity);
     }, 0).toFixed(2);
   };
