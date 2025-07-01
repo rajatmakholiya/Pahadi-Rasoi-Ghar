@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectLoginDb from '@/lib/mongodb';
 import getUserModel, { IAddress } from '@/models/User';
 
+
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Record<string, string | string[]> }
 ) {
-  const { params } = context;
+  const { id } = context.params;
+  const addressId = Array.isArray(id) ? id[0] : id;
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -17,7 +19,6 @@ export async function PUT(
     }
 
     const updatedAddress: IAddress = await request.json();
-    const addressId = params.id;
     const user = await User.findOne({ email: userEmail });
 
     if (!user || !user.address) {
@@ -51,9 +52,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Record<string, string | string[]> }
 ) {
-  const { params } = context;
+  const { id } = context.params;
+  const addressId = Array.isArray(id) ? id[0] : id;
   const loginDbConnection = await connectLoginDb();
   const User = getUserModel(loginDbConnection);
 
@@ -63,7 +65,6 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const addressId = params.id;
     const user = await User.findOne({ email: userEmail });
 
     if (!user || !user.address) {
